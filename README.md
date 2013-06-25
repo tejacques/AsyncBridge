@@ -40,7 +40,7 @@ AsyncBridge resolves this problem by creating a new SynchronizationContext to ru
 Example Usage
 -------------
 
-Create an AsyncBridge by calling the static `AsyncHelper.Wait` static accessor within a using directive. From there, call the `AsyncBridge.Run(Task<T> task, Action<Task<T>> callback)` function, which optionally takes a callback after the task has completed. This can be used to extract method results into the synchronous method.
+Create an AsyncBridge by calling the static `AsyncHelper.Wait` static accessor within a using directive. From there, call the `AsyncBridge.Run(Task<T> task, Action<Task<T>> callback)` function, which optionally takes a callback after the task has completed. This can be used to extract method results into the synchronous method. Any return values you want to extract through callbacks should first have a value initialized before the using statement.
 
 A typical usage example is shown below:
 ```csharp
@@ -82,15 +82,13 @@ public async Task<string> AsyncStringException()
 
 public void Test()
 {
-    string string1 = "";
-    string string2 = "";
+    string s = "";
 
     try
     {
         using (var A = AsyncHelper.Wait)
         {
-            A.Run(AsyncString(), x => string1 = x.Result);
-            A.Run(AsyncString(), x => string2 = x.Result);
+            A.Run(AsyncString(), x => s = x.Result);
         }
     }
     catch (Exception e)
