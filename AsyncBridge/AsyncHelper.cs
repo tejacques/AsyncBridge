@@ -77,13 +77,13 @@ namespace AsyncBridge
                 {
                     task.ContinueWith(callback);
                 }
-                T ret = default(T);
+                
                 CurrentContext.Post(async _ =>
                 {
                     try
                     {
                         Increment();
-                        ret = await task;
+                        await task;
                     }
                     catch (Exception e)
                     {
