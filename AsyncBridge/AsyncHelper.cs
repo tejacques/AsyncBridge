@@ -185,7 +185,7 @@ namespace AsyncBridge
                         task.Item1(task.Item2);
                         if (InnerException != null) // the method threw an exeption
                         {
-                            throw new AggregateException("AsyncHelpers.Run method threw an exception.", InnerException);
+                            throw new AggregateException("AsyncBridge.Run method threw an exception.", InnerException);
                         }
                     }
                     else
