@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>AsyncBridge</id>
+    <version>1.0.0</version>
+    <title>AsyncBridge</title>
+    <authors>Tom Jacques</authors>
+    <owners>Tom Jacques</owners>
+    <licenseUrl>https://github.com/tejacques/AsyncBridge/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/tejacques/AsyncBridge</projectUrl>
+    <iconUrl></iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+        Binaries for the AsyncBridge library.
+        Visit https://github.com/tejacques/AsyncBridge for an overview and usage examples.
+    </description>
+    <summary>
+        An open source helper library for interacting with asynchronous methods from synchronous ones from Windows Forms and ASP.NET applications.
+    </summary>
+    <releaseNotes>
+        Version 1.0.0:
+
+        Fully oeprational basic functionary for
+         - AsyncBridge.Run(Task)
+         - AsyncHelper.FireAndForget(Func&lt;Task&gt;, Action&lt;Exception&gt;)
+    </releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <tags>async deadlock</tags>
+  </metadata>
+  <files>
+    <file src="..\lib\*.*" target="lib" />
+    <file src="..\..\src\*.cs" target="src\AsyncBridge" />
+  </files>
+</package>
