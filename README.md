@@ -11,7 +11,7 @@ Why was it made?
 
 C# 5.0 introduced async and await for concurrent task execution. This is an incredible feature that allows programmers to take advantage of asynchronous blocking to execute code more efficiently. However, there is a problem. await only works from within async functions, and outside of async functions, there is no guarantee that waiting on a task to finish won't result in a deadlock, unless you are executing a console application. From windows forms or ASP.NET contexts, the following example will result in a deadlock that will never return.
 
-### Deadlock Example
+#### Deadlock Example
 
 From inside a Windows Forms or ASP.NET application, the following code will cause a deadlock.
 
@@ -100,6 +100,42 @@ public void Test()
     }
 }
 ```
+
+
+Fire and Forget
+---------------
+
+The "Fire and Forget" pattern is an excellent way to keep the UI or HTTP response thread responsive by executing longer running tasks in the background. A good example is database logging for non user-facing data (I.E. The user doesn't need to know that a database action succeeded). This pattern can be accomplished in a variety of different ways, however in Windows Forms or ASP.NET context, most of them don't work, or have serious flaws.
+
+The two natural seeming choices are executing an `async void` method, or an `async Task` method without waiting for it to complete.
+
+Async void methods at first appear to do exactly what it wanted -- asynchronously run a task without any regard for it's result. However, ASP.NET and Windows Forms threads will finish everything in a synchronization context before returning, so pages will not serve until any `async void` methods called have completed, which is the complete opposite of fire and forget -- fire and wait. Calling an async Task method and not waiting on the result has the same behavior.
+
+In order to actually get the desired behavior, one needs to run the fire and forget method in a new thread. The Task thread pool works well for this meaning Task.Run is a good choice. The caveat of Task.Run is that any exceptions that occur unhandled will sit around occupying memory until they are dealt with. Since Fire and forget method exceptions usually aren't at the top level, memory leaks can occur. In order to resolve this, you need to wrap try/catch around the awaited task which Task.Run will execute. Care must be taken to actually await the task, because otherwise the exception will remain uncaught as the try/catch will be wrapping the start of the task rather than the task in its entirety. This is what the AsyncHelper.FireAndForget function does.
+
+#### Fire and Forget Example
+
+```csharp
+private async Task FAFExample()
+{
+    await Task.Delay(1000);
+    throw new Exception("Test exception");
+}
+
+public void Test()
+{
+    AsyncHelper.FireAndForget(() => FAFExample()); // Will silently ignore exceptions
+    AsyncHelper.FireAndForget(                     // Will handle exceptions by writing
+        () => FAFExample(),                        // e.Message to the console
+        e => Console.WriteLine(e.Message));        // e.Message = "Test exception"
+        
+    // These lines will be reached immediately, not
+    // ~1000ms or ~2000ms from the previous lines)
+    // and method execution will not block.
+}
+```
+
+This can be used in any context, from async methods or synchronous methods, and from inside or outside of `using(AsyncBridge)` blocks
 
 Inspiration
 -----------
