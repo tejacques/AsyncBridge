@@ -105,7 +105,7 @@ public void Test()
 Fire and Forget
 ---------------
 
-The "Fire and Forget" pattern is an excellent way to keep the UI or HTTP response thread responsive by executing longer running tasks in the background. A good example is database logging for non user-facing data (I.E. The user doesn't need to know that a database action succeeded). This pattern can be accomplished in a variety of different ways, however in Windows Forms or ASP.NET context, most of them don't work, or have serious flaws.
+The "Fire and Forget" pattern is an excellent way to keep the UI or ASP.NET request thread responsive by executing longer running tasks in the background. A good example is database logging for non user-facing data (I.E. The user doesn't need to know that a database action succeeded). This pattern can be accomplished in a variety of different ways, however in Windows Forms or ASP.NET context, most of them don't work, or have serious flaws.
 
 The two natural seeming choices are executing an `async void` method, or an `async Task` method without waiting for it to complete.
 
