@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>AsynchronousBridge</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <title>AsyncBridge</title>
     <authors>Tom Jacques</authors>
     <owners>Tom Jacques</owners>
@@ -18,9 +18,11 @@
         An open source helper library for interacting with asynchronous methods from synchronous ones from Windows Forms and ASP.NET applications.
     </summary>
     <releaseNotes>
-        Version 1.0.0:
+        Version 1.0.1:
+         - Include XML Documentation
 
-        Fully oeprational basic functionary for
+        Version 1.0.0:
+        Fully operational basic functionary for
          - AsyncBridge.Run(Task)
          - AsyncHelper.FireAndForget(Func&lt;Task&gt;, Action&lt;Exception&gt;)
     </releaseNotes>
