@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>AsyncBridge</id>
+    <id>AsynchronousBridge</id>
     <version>1.0.0</version>
     <title>AsyncBridge</title>
     <authors>Tom Jacques</authors>
     <owners>Tom Jacques</owners>
     <licenseUrl>https://github.com/tejacques/AsyncBridge/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/tejacques/AsyncBridge</projectUrl>
-    <iconUrl></iconUrl>
+    <iconUrl>https://raw.github.com/tejacques/AsyncBridge/master/icon/AsyncBridge.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
         Binaries for the AsyncBridge library.
@@ -25,10 +25,10 @@
          - AsyncHelper.FireAndForget(Func&lt;Task&gt;, Action&lt;Exception&gt;)
     </releaseNotes>
     <copyright>Copyright 2013</copyright>
-    <tags>async deadlock</tags>
+    <tags>async await deadlock callback</tags>
   </metadata>
   <files>
-    <file src="..\lib\*.*" target="lib" />
+    <file src="..\..\lib\*.*" target="lib\Net40" />
     <file src="..\..\src\*.cs" target="src\AsyncBridge" />
   </files>
 </package>
