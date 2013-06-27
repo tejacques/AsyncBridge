@@ -141,6 +141,35 @@ namespace AsyncBridge
             get { return new AsyncBridge(); }
         }
 
+        /// <summary>
+        /// Runs a task with the "Fire and Forget" pattern using Task.Run,
+        /// and unwraps and handles exceptions
+        /// </summary>
+        /// <param name="task">A function that returns the task to run</param>
+        /// <param name="handle">Error handling action, null by default</param>
+        public static void FireAndForget(
+            Func<Task> task,
+            Action<Exception> handle = null)
+        {
+            Task.Run(() =>
+            {
+                ((Func<Task>)(async () =>
+                {
+                    try
+                    {
+                        await task();
+                    }
+                    catch (Exception e)
+                    {
+                        if (null != handle)
+                        {
+                            handle(e);
+                        }
+                    }
+                }))();
+            });
+        }
+
         private class ExclusiveSynchronizationContext : SynchronizationContext
         {
             private bool done;
