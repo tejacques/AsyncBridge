@@ -4,7 +4,7 @@ AsyncBridge
 What is it?
 -----------
 
-A library to help bridge C# Async Function execution from synchronous threads, such as in Windows Forms and ASP.NET.
+A library to help bridge C# async method execution from synchronous methods, such as in Windows Forms and ASP.NET.
 
 Why was it made?
 ----------------
