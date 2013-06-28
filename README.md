@@ -93,7 +93,7 @@ public void Test()
     }
     catch (Exception e)
     {
-        // e.Message                 = "AsyncHelpers.Run method threw an exception."
+        // e.Message                 = "AsyncBridge.Run method threw an exception."
         // e.InnerException.Message) = "Test Exception."
         // Handle exception
         // ...
