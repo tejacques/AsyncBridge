@@ -90,7 +90,7 @@ header h2 {
 }
 
 .inner {
-  width: 620px;
+  width: 740px;
   margin: 0 auto;
 }
 
@@ -100,6 +100,7 @@ header h2 {
 
 #downloads {
   margin-bottom: 40px;
+  margin-left: 40px;
 }
 
 a.button {
