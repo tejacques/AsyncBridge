@@ -88,7 +88,7 @@ public void Test()
     {
         using (var A = AsyncHelper.Wait)
         {
-            A.Run(AsyncString(), x => s = x.Result);
+            A.Run(AsyncStringException(), x => s = x.Result);
         }
     }
     catch (Exception e)
