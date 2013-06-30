@@ -121,7 +121,7 @@
     <span class="p">{</span>
         <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">A</span> <span class="p">=</span> <span class="n">AsyncHelper</span><span class="p">.</span><span class="n">Wait</span><span class="p">)</span>
         <span class="p">{</span>
-            <span class="n">A</span><span class="p">.</span><span class="n">Run</span><span class="p">(</span><span class="n">AsyncString</span><span class="p">(),</span> <span class="n">x</span> <span class="p">=&gt;</span> <span class="n">s</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Result</span><span class="p">);</span>
+            <span class="n">A</span><span class="p">.</span><span class="n">Run</span><span class="p">(</span><span class="n">AsyncStringException</span><span class="p">(),</span> <span class="n">x</span> <span class="p">=&gt;</span> <span class="n">s</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Result</span><span class="p">);</span>
         <span class="p">}</span>
     <span class="p">}</span>
     <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span>
