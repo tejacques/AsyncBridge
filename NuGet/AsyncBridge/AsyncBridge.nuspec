@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>AsynchronousBridge</id>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <title>AsyncBridge</title>
     <authors>Tom Jacques</authors>
     <owners>Tom Jacques</owners>
@@ -18,6 +18,9 @@
         An open source helper library for interacting with asynchronous methods from synchronous ones from Windows Forms and ASP.NET applications.
     </summary>
     <releaseNotes>
+        Version 1.0.3:
+         - Include updated documentation and debugging information in package
+
         Version 1.0.2:
          - Fix a race condition by replacing task.ContinueWith with the direct continuation invocation
 
