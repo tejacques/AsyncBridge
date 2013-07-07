@@ -41,16 +41,17 @@ namespace AsyncBridge
             /// <param name="callback">Optional callback</param>
             public void Run(Task task, Action<Task> callback = null)
             {
-                if (null != callback)
-                {
-                    task.ContinueWith(callback);
-                }
                 CurrentContext.Post(async _ =>
                 {
                     try
                     {
                         Increment();
                         await task;
+
+                        if (null != callback)
+                        {
+                            callback(task);
+                        }
                     }
                     catch (Exception e)
                     {
@@ -73,17 +74,17 @@ namespace AsyncBridge
             /// <param name="callback">Optional callback</param>
             public void Run<T>(Task<T> task, Action<Task<T>> callback = null)
             {
-                if (null != callback)
-                {
-                    task.ContinueWith(callback);
-                }
-                
                 CurrentContext.Post(async _ =>
                 {
                     try
                     {
                         Increment();
                         await task;
+
+                        if (null != callback)
+                        {
+                            callback(task);
+                        }
                     }
                     catch (Exception e)
                     {
