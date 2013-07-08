@@ -6,6 +6,15 @@ What is it?
 
 A library to help bridge C# async method execution from synchronous methods, such as in Windows Forms and ASP.NET.
 
+How can I get it?
+-----------------
+
+AsyncBridge is available as a NuGet package: https://nuget.org/packages/AsynchronousBridge/
+
+```
+PM> Install-Package AsynchronousBridge
+```
+
 Why was it made?
 ----------------
 
