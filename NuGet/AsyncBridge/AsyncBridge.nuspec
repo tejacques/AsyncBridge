@@ -41,9 +41,7 @@
     <tags>async await deadlock callback</tags>
     <dependencies>
         <group targetFramework="net40">
-            <dependency id="Microsoft.Bcl" />
             <dependency id="Microsoft.Bcl.Async" />
-            <dependency id="Microsoft.Bcl.Build" />
         </group>
     </dependencies>
   </metadata>
