@@ -66,8 +66,8 @@ public void Test()
 
     using (var A = AsyncHelper.Wait)
     {
-        A.Run(AsyncString(), x => string1 = x.Result);
-        A.Run(AsyncString(), x => string2 = x.Result);
+        A.Run(AsyncString(), res => string1 = res);
+        A.Run(AsyncString(), res => string2 = res);
     }
     
     // Total Execution time at this point will be ~1000ms, not ~2000ms
@@ -97,7 +97,7 @@ public void Test()
     {
         using (var A = AsyncHelper.Wait)
         {
-            A.Run(AsyncStringException(), x => s = x.Result);
+            A.Run(AsyncStringException(), res => s = res);
         }
     }
     catch (Exception e)
