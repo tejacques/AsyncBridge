@@ -39,17 +39,17 @@
     </releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>async await deadlock callback</tags>
+    <dependencies>
+        <group targetFramework="net40">
+            <dependency id="Microsoft.Bcl" />
+            <dependency id="Microsoft.Bcl.Async" />
+            <dependency id="Microsoft.Bcl.Build" />
+        </group>
+    </dependencies>
   </metadata>
   <files>
     <file src="..\..\lib\Net40\*.*" target="lib\Net40" />
     <file src="..\..\lib\Net45\*.*" target="lib\Net45" />
     <file src="..\..\src\AsyncBridge\*.cs" target="src\AsyncBridge" />
   </files>
-  <dependencies>
-    <group targetFramework="net40">
-        <dependency id="Microsoft.Bcl" />
-        <dependency id="Microsoft.Bcl.Async" />
-        <dependency id="Microsoft.Bcl.Build" />
-    </group>
-  </dependencies>
 </package>
