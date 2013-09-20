@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AsyncBridge</name>
+    </assembly>
+    <members>
+        <member name="T:AsyncBridge.AsyncHelper">
+            <summary>
+            A Helper class to run Asynchronous functions from synchronous ones
+            </summary>
+        </member>
+        <member name="M:AsyncBridge.AsyncHelper.FireAndForget(System.Func{System.Threading.Tasks.Task},System.Action{System.Exception})">
+            <summary>
+            Runs a task with the "Fire and Forget" pattern using Task.Run,
+            and unwraps and handles exceptions
+            </summary>
+            <param name="task">A function that returns the task to run</param>
+            <param name="handle">Error handling action, null by default</param>
+        </member>
+        <member name="P:AsyncBridge.AsyncHelper.Wait">
+            <summary>
+            Creates a new AsyncBridge. This should always be used in
+            conjunction with the using statement, to ensure it is disposed
+            </summary>
+        </member>
+        <member name="T:AsyncBridge.AsyncHelper.AsyncBridge">
+            <summary>
+            A class to bridge synchronous asynchronous methods
+            </summary>
+        </member>
+        <member name="M:AsyncBridge.AsyncHelper.AsyncBridge.#ctor">
+            <summary>
+            Constructs the AsyncBridge by capturing the current
+            SynchronizationContext and replacing it with a new
+            ExclusiveSynchronizationContext.
+            </summary>
+        </member>
+        <member name="M:AsyncBridge.AsyncHelper.AsyncBridge.Run(System.Threading.Tasks.Task,System.Action{System.Threading.Tasks.Task})">
+            <summary>
+            Execute's an async task with a void return type
+            from a synchronous context
+            </summary>
+            <param name="task">Task to execute</param>
+            <param name="callback">Optional callback</param>
+        </member>
+        <member name="M:AsyncBridge.AsyncHelper.AsyncBridge.Run``1(System.Threading.Tasks.Task{``0},System.Action{System.Threading.Tasks.Task{``0}})">
+            <summary>
+            Execute's an async task with a T return type
+            from a synchronous context
+            </summary>
+            <typeparam name="T">The type of the task</typeparam>
+            <param name="task">Task to execute</param>
+            <param name="callback">Optional callback</param>
+        </member>
+        <member name="M:AsyncBridge.AsyncHelper.AsyncBridge.Run``1(System.Threading.Tasks.Task{``0},System.Action{``0})">
+            <summary>
+            Execute's an async task with a T return type
+            from a synchronous context
+            </summary>
+            <typeparam name="T">The type of the task</typeparam>
+            <param name="task">Task to execute</param>
+            <param name="callback">The callback function that uses the result of the task</param>
+        </member>
+        <member name="M:AsyncBridge.AsyncHelper.AsyncBridge.Dispose">
+            <summary>
+            Disposes the object
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>AsyncBridge</name>
+        <name>AsyncBridge.NET40</name>
     </assembly>
     <members>
         <member name="T:AsyncBridge.AsyncHelper">
@@ -51,6 +51,15 @@
             <typeparam name="T">The type of the task</typeparam>
             <param name="task">Task to execute</param>
             <param name="callback">Optional callback</param>
+        </member>
+        <member name="M:AsyncBridge.AsyncHelper.AsyncBridge.Run``1(System.Threading.Tasks.Task{``0},System.Action{``0})">
+            <summary>
+            Execute's an async task with a T return type
+            from a synchronous context
+            </summary>
+            <typeparam name="T">The type of the task</typeparam>
+            <param name="task">Task to execute</param>
+            <param name="callback">The callback function that uses the result of the task</param>
         </member>
         <member name="M:AsyncBridge.AsyncHelper.AsyncBridge.Dispose">
             <summary>
