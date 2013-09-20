@@ -56,7 +56,6 @@ namespace AsyncBridge
                     catch (Exception e)
                     {
                         CurrentContext.InnerException = e;
-                        throw;
                     }
                     finally
                     {
@@ -89,7 +88,6 @@ namespace AsyncBridge
                     catch (Exception e)
                     {
                         CurrentContext.InnerException = e;
-                        throw;
                     }
                     finally
                     {
@@ -135,8 +133,7 @@ namespace AsyncBridge
                 }
                 catch (Exception e)
                 {
-                    CurrentContext.InnerException = e;
-                    throw;
+                    throw e;
                 }
                 finally
                 {
