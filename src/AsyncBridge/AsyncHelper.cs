@@ -73,27 +73,14 @@ namespace AsyncBridge
             /// <param name="callback">Optional callback</param>
             public void Run<T>(Task<T> task, Action<Task<T>> callback = null)
             {
-                CurrentContext.Post(async _ =>
+                if (null != callback)
                 {
-                    try
-                    {
-                        Increment();
-                        await task;
-
-                        if (null != callback)
-                        {
-                            callback(task);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        CurrentContext.InnerException = e;
-                    }
-                    finally
-                    {
-                        Decrement();
-                    }
-                }, null);
+                    Run((Task)task, (finishedTask) => callback((Task<T>)finishedTask));
+                }
+                else
+                {
+                    Run((Task)task);
+                }
             }
 
             /// <summary>
