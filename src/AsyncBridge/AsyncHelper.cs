@@ -98,6 +98,18 @@ namespace AsyncBridge
                 }, null);
             }
 
+            /// <summary>
+            /// Execute's an async task with a T return type
+            /// from a synchronous context
+            /// </summary>
+            /// <typeparam name="T">The type of the task</typeparam>
+            /// <param name="task">Task to execute</param>
+            /// <param name="callback">The callback function that uses the result of the task</param>
+            public void Run<T>(Task<T> task, Action<T> callback)
+            {
+                Run(task, (t) => callback(t.Result));
+            }
+
             private void Increment()
             {
                 Interlocked.Increment(ref TaskCount);
