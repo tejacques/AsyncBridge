@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncBridge", "AsyncBridge.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncBridge.Tests", "..\AsyncBridge.Tests\AsyncBridge.Tests.csproj", "{301C2ADE-0C41-4448-AF17-62422CAA905C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncBridge.NET40", "..\AsyncBridge.NET40\AsyncBridge.NET40.csproj", "{CC87D850-5D18-409D-B419-EAAFE9870BF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncBridge.NET40.Tests", "..\AsyncBridge.NET40.Tests\AsyncBridge.NET40.Tests.csproj", "{39CF24EC-9399-4CD4-A1CF-61C10926A12C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +23,14 @@ Global
 		{301C2ADE-0C41-4448-AF17-62422CAA905C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{301C2ADE-0C41-4448-AF17-62422CAA905C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{301C2ADE-0C41-4448-AF17-62422CAA905C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC87D850-5D18-409D-B419-EAAFE9870BF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC87D850-5D18-409D-B419-EAAFE9870BF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC87D850-5D18-409D-B419-EAAFE9870BF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC87D850-5D18-409D-B419-EAAFE9870BF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39CF24EC-9399-4CD4-A1CF-61C10926A12C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39CF24EC-9399-4CD4-A1CF-61C10926A12C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39CF24EC-9399-4CD4-A1CF-61C10926A12C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39CF24EC-9399-4CD4-A1CF-61C10926A12C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -148,7 +148,12 @@ namespace AsyncBridge
             Func<Task> task,
             Action<Exception> handle = null)
         {
-            Task.Run(() =>
+#if NET_45
+            Task.Run(
+#elif NET_40
+            TaskEx.Run(
+#endif
+            () =>
             {
                 ((Func<Task>)(async () =>
                 {
