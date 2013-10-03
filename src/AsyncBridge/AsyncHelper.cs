@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace AsyncBridge
 {
+    using EventTask = Tuple<SendOrPostCallback, object>;
+    using EventQueue = Queue<Tuple<SendOrPostCallback, object>>;
+
     /// <summary>
     /// A Helper class to run Asynchronous functions from synchronous ones
     /// </summary>
@@ -29,7 +32,7 @@ namespace AsyncBridge
             internal AsyncBridge()
             {
                 OldContext = SynchronizationContext.Current;
-                CurrentContext = new ExclusiveSynchronizationContext();
+                CurrentContext = new ExclusiveSynchronizationContext(OldContext);
                 SynchronizationContext.SetSynchronizationContext(CurrentContext);
             }
 
@@ -174,11 +177,31 @@ namespace AsyncBridge
 
         private class ExclusiveSynchronizationContext : SynchronizationContext
         {
-            private bool done;
+            private readonly AutoResetEvent _workItemsWaiting =
+                new AutoResetEvent(false);
+            private readonly object _lock;
+
+            private bool _done;
+            private EventQueue _items;
+
             public Exception InnerException { get; set; }
-            readonly AutoResetEvent workItemsWaiting = new AutoResetEvent(false);
-            readonly Queue<Tuple<SendOrPostCallback, object>> items =
-                new Queue<Tuple<SendOrPostCallback, object>>();
+
+            public ExclusiveSynchronizationContext(SynchronizationContext old)
+            {
+                ExclusiveSynchronizationContext oldEx =
+                    old as ExclusiveSynchronizationContext;
+
+                if (null != oldEx)
+                {
+                    this._items = oldEx._items;
+                    this._lock = oldEx._lock;
+                }
+                else
+                {
+                    this._items = new EventQueue();
+                    this._lock = new object();
+                }
+            }
 
             public override void Send(SendOrPostCallback d, object state)
             {
@@ -187,41 +210,59 @@ namespace AsyncBridge
 
             public override void Post(SendOrPostCallback d, object state)
             {
-                lock (items)
+                Console.WriteLine("Locking");
+                lock (_lock)
                 {
-                    items.Enqueue(Tuple.Create(d, state));
+                    _items.Enqueue(Tuple.Create(d, state));
+                    Console.WriteLine("Unocking");
                 }
-                workItemsWaiting.Set();
+                _workItemsWaiting.Set();
             }
 
             public void EndMessageLoop()
             {
-                Post(_ => done = true, null);
+                Post(_ => _done = true, null);
             }
 
             public void BeginMessageLoop()
             {
-                while (!done)
+                while (!_done)
                 {
-                    Tuple<SendOrPostCallback, object> task = null;
-                    lock (items)
+                    EventTask task = null;
+
+                    /*
+                    if (!eventIterator.MoveNext())
                     {
-                        if (items.Count > 0)
+                        // Freak out -- this shouldn't happen!
+                        task = null;
+                    }
+                    else
+                    {
+                        task = eventIterator.Current;
+                    }
+                    */
+                    
+                    lock (_lock)
+                    {
+                        if (_items.Count > 0)
                         {
-                            task = items.Dequeue();
+                            task = _items.Dequeue();
                         }
                     }
+
                     if (task != null)
                     {
                         task.Item1(task.Item2);
                         if (InnerException != null) // the method threw an exeption
                         {
-                            throw new AggregateException("AsyncBridge.Run method threw an exception.", InnerException);
+                            throw new AggregateException(
+                                "AsyncBridge.Run method threw an exception.",
+                                InnerException);
                         }
                     }
                     else
                     {
-                        workItemsWaiting.WaitOne();
+                        _workItemsWaiting.WaitOne();
                     }
                 }
             }

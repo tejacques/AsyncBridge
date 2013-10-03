@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{301C2ADE-0C41-4448-AF17-62422CAA905C}</ProjectGuid>
+    <ProjectGuid>{B1BE567A-6AFC-4965-90B8-444E1E3F46E7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AsyncBridge.Tests</RootNamespace>
-    <AssemblyName>AsyncBridge.Tests</AssemblyName>
+    <RootNamespace>AsyncBridge.Option</RootNamespace>
+    <AssemblyName>AsyncBridge.Option</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -35,11 +35,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\AsyncBridge\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Option, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Option">
       <HintPath>..\AsyncBridge\packages\Option.2.0.1\lib\Net35\Option.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -51,21 +47,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncBridgeTests.cs" />
+    <Compile Include="AsyncBridgeOptionExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AsyncBridge.Option\AsyncBridge.Option.csproj">
-      <Project>{b1be567a-6afc-4965-90b8-444e1e3f46e7}</Project>
-      <Name>AsyncBridge.Option</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AsyncBridge\AsyncBridge.csproj">
       <Project>{19595376-6fd8-4839-9580-9fd7835502b0}</Project>
       <Name>AsyncBridge</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

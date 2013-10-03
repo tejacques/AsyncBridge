@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Option;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,6 +50,31 @@ namespace AsyncBridge.NET40.Tests
             }
 
             Assert.AreEqual(expected, actual);
+        }
+
+        public async Task<string> AsyncStringOption(string s)
+        {
+#if NET_45
+            await Task.Yield();
+#elif NET_40
+            await TaskEx.Yield();
+#endif
+
+            return s;
+        }
+
+        [Test]
+        public void TestResultOption()
+        {
+            Option<string> actual;
+            string expected = "string";
+
+            using (var A = AsyncHelper.Wait)
+            {
+                A.Run(AsyncStringOption(expected), out actual);
+            }
+
+            Assert.True(expected == actual);
         }
 
         public async Task<string> AsyncStringDelay(string s, int ms)
@@ -165,6 +191,59 @@ namespace AsyncBridge.NET40.Tests
 
             waitHandle.WaitOne(delay * 2 + EPSILON);
             Assert.AreEqual(true, exceptionThrown);
+        }
+
+        [Test]
+        public void TestMulti()
+        {
+            int delay = 100;
+            string expected = "string";
+
+            string string1 = "";
+            string string2 = "";
+
+            Stopwatch s = new Stopwatch();
+
+            s.Start();
+            using (var A = AsyncHelper.Wait)
+            {
+                A.Run(MultiHelperAsync(expected, delay));
+                A.Run(AsyncStringDelay(expected, delay), res => string1 = res);
+                A.Run(AsyncStringDelay(expected, delay), res => string2 = res);
+            }
+            s.Stop();
+
+            // Total Execution time at this point will be ~100ms, not ~200ms
+            int EPSILON = 30; // millisecond margin of error
+            Assert.Less(s.ElapsedMilliseconds, delay + EPSILON);
+
+            // The value of string1 == expected
+            Assert.AreEqual(expected, string1);
+
+            // The value of string2 == expected
+            Assert.AreEqual(expected, string2);
+        }
+
+        private async Task MultiHelperAsync(string expected, int delay)
+        {
+#if NET_45
+            await Task.Yield();
+#elif NET_40
+            await TaskEx.Yield();
+#endif
+            MultiHelper(expected, delay);
+
+        }
+        private void MultiHelper(string expected, int delay)
+        {
+            string string1 = "";
+            string string2 = "";
+
+            using (var A = AsyncHelper.Wait)
+            {
+                A.Run(AsyncStringDelay(expected, delay), res => string1 = res);
+                A.Run(AsyncStringDelay(expected, delay), res => string2 = res);
+            }
         }
 
     }
