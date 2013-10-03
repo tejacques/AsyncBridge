@@ -78,6 +78,34 @@ public void Test()
 
 All async functions called by AsyncBridge.Run(Task) inside of the using scope will be executed asynchronously. The async tasks are waited on in a nondeadlocking manner in the destructor of AsyncBridge.
 
+### AsyncBridge.Option ###
+
+Using the AsyncBridge.Option extension library (available on NuGet as the AsynchronousBridge.Option package) we can set the value of an option by passing it as an out parameter to AsyncBridge.Run, like so:
+
+```csharp
+public async Task<string> AsyncString()
+{
+    await Task.Delay(1000);
+    return "TestAsync";
+}
+
+public void Test()
+{
+    Option<string> option1;
+    Option<string> option2;
+
+    using (var A = AsyncHelper.Wait)
+    {
+        A.Run(AsyncString(), out option1);
+        A.Run(AsyncString(), out option2);
+    }
+    
+    // Total Execution time at this point will be ~1000ms, not ~2000ms
+    // The value of option1 = "TestAsync"
+    // The value of option2 = "TestAsync"
+}
+```
+
 Exception Handling
 ------------------
 
