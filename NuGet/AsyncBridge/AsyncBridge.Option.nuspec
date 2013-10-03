@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>AsynchronousBridge.Option</id>
+    <version>1.0.0</version>
+    <title>AsyncBridge.Option</title>
+    <authors>Tom Jacques</authors>
+    <owners>Tom Jacques</owners>
+    <licenseUrl>https://github.com/tejacques/AsyncBridge/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/tejacques/AsyncBridge/</projectUrl>
+    <iconUrl>https://raw.github.com/tejacques/AsyncBridge/master/icon/AsyncBridge.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+        Binaries for the AsyncBridge.Option extension library.
+        Visit https://github.com/tejacques/AsyncBridge for an overview and usage examples.
+    </description>
+    <summary>
+        An open source helper library for that adds helpful syntactic sugar to the AsynchronousBridge project.
+    </summary>
+    <releaseNotes>
+        Version Release Notes:
+
+        Version 1.0.0
+         - Adds the following extension method to AsyncBridge
+
+        Run&lt;T&gt;(Task&lt;&gt; task, out Option&lt;T&gt;)
+
+        This allows you to simply provide an out Option parameter, rather than specifying a lambda callback to set a variable, like so:
+
+        Option&lt;int&gt; option;
+
+        using(var A = AsyncHelper.Wait)
+        {
+            A.Run(someTaskThatReturns(1), out option);
+        }
+
+        o == 1; // true
+
+    </releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <tags>Asynchronous Async Await Deadlock Callback Option AsyncBridge AsynchronousBridge</tags>
+    <dependencies>
+        <dependency id="AsynchronousBridge" />
+        <dependency id="Option" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\..\lib\AsyncBridge.Option\Net40\*.*" target="lib\Net40" />
+    <file src="..\..\lib\AsyncBridge.Option\Net45\*.*" target="lib\Net45" />
+    <file src="..\..\src\AsyncBridge.Option\*.cs" target="src\AsyncBridge" />
+  </files>
+</package>
