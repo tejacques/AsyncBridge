@@ -129,6 +129,17 @@ namespace AsyncBridge.NET40.Tests
             throw new Exception("Test Exception.");
         }
 
+        public async Task<string> AsyncStringException(int msdelay)
+        {
+#if NET_45
+            await Task.Delay(msdelay);
+#elif NET_40
+            await TaskEx.Delay(msdelay);
+#endif
+
+            throw new Exception("Test Exception.");
+        }
+
         [Test]
         public void TestException()
         {
@@ -244,6 +255,63 @@ namespace AsyncBridge.NET40.Tests
                 A.Run(AsyncStringDelay(expected, delay), res => string1 = res);
                 A.Run(AsyncStringDelay(expected, delay), res => string2 = res);
             }
+        }
+
+        [Test]
+        public void TestMultiException()
+        {
+            Assert.Throws(typeof(AggregateException), () =>
+            {
+                using (var A = AsyncHelper.Wait)
+                {
+                    A.Run(MultiHelperExceptionAsync());
+                    A.Run(AsyncStringException(50));
+                }
+            });
+
+            try
+            {
+                using (var A = AsyncHelper.Wait)
+                {
+                    A.Run(MultiHelperExceptionAsync());
+                    A.Run(AsyncStringException(50));
+                }
+            }
+            catch (Exception e)
+            {
+                Assert.AreEqual("AsyncBridge.Run method threw an exception.", e.Message);
+                Assert.NotNull(e.InnerException);
+                Assert.AreEqual("Test Exception.", e.InnerException.Message);
+            }
+        }
+
+        private async Task MultiHelperExceptionAsync()
+        {
+#if NET_45
+            await Task.Yield();
+#elif NET_40
+            await TaskEx.Yield();
+#endif
+            MultiHelperException();
+
+        }
+        private void MultiHelperException()
+        {
+            string s = "";
+
+            try
+            {
+                using (var A = AsyncHelper.Wait)
+                {
+                    A.Run(AsyncStringDelay("s", 100), res => s = res);
+                }
+            }
+            catch
+            {
+                Assert.Fail("This should not throw!");
+            }
+
+            Assert.AreEqual("s", s);
         }
 
     }
