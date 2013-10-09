@@ -227,18 +227,6 @@ namespace AsyncBridge
                 while (!_done)
                 {
                     EventTask task = null;
-
-                    /*
-                    if (!eventIterator.MoveNext())
-                    {
-                        // Freak out -- this shouldn't happen!
-                        task = null;
-                    }
-                    else
-                    {
-                        task = eventIterator.Current;
-                    }
-                    */
                     
                     lock (_lock)
                     {
