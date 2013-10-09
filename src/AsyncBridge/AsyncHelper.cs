@@ -210,11 +210,9 @@ namespace AsyncBridge
 
             public override void Post(SendOrPostCallback d, object state)
             {
-                Console.WriteLine("Locking");
                 lock (_lock)
                 {
                     _items.Enqueue(Tuple.Create(d, state));
-                    Console.WriteLine("Unocking");
                 }
                 _workItemsWaiting.Set();
             }
