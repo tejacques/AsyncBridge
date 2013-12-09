@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>AsynchronousBridge</id>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
     <title>AsyncBridge</title>
     <authors>Tom Jacques</authors>
     <owners>Tom Jacques</owners>
@@ -19,6 +19,9 @@
     </summary>
     <releaseNotes>
         Version Release Notes:
+
+        Version 1.2.2
+        - Uses ConcurrentQueue instead of a Queue with locks.
 
         Version 1.2.1
          - Small improvements to error handling
