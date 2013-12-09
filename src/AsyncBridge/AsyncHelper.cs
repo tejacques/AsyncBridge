@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 namespace AsyncBridge
 {
     using EventTask = Tuple<SendOrPostCallback, object>;
-    using EventQueue = System.Collections.Concurrent.ConcurrentQueue<Tuple<SendOrPostCallback, object>>;
+    using EventQueue = ConcurrentQueue<Tuple<SendOrPostCallback, object>>;
 
     /// <summary>
     /// A Helper class to run Asynchronous functions from synchronous ones
@@ -31,8 +32,10 @@ namespace AsyncBridge
             internal AsyncBridge()
             {
                 OldContext = SynchronizationContext.Current;
-                CurrentContext = new ExclusiveSynchronizationContext(OldContext);
-                SynchronizationContext.SetSynchronizationContext(CurrentContext);
+                CurrentContext = 
+                    new ExclusiveSynchronizationContext(OldContext);
+                SynchronizationContext
+                    .SetSynchronizationContext(CurrentContext);
             }
 
             /// <summary>
@@ -77,7 +80,8 @@ namespace AsyncBridge
             {
                 if (null != callback)
                 {
-                    Run((Task)task, (finishedTask) => callback((Task<T>)finishedTask));
+                    Run((Task)task, (finishedTask) =>
+                        callback((Task<T>)finishedTask));
                 }
                 else
                 {
@@ -91,7 +95,9 @@ namespace AsyncBridge
             /// </summary>
             /// <typeparam name="T">The type of the task</typeparam>
             /// <param name="task">Task to execute</param>
-            /// <param name="callback">The callback function that uses the result of the task</param>
+            /// <param name="callback">
+            /// The callback function that uses the result of the task
+            /// </param>
             public void Run<T>(Task<T> task, Action<T> callback)
             {
                 Run(task, (t) => callback(t.Result));
@@ -126,7 +132,8 @@ namespace AsyncBridge
                 }
                 finally
                 {
-                    SynchronizationContext.SetSynchronizationContext(OldContext);
+                    SynchronizationContext
+                        .SetSynchronizationContext(OldContext);
                 }
             }
         }
@@ -201,7 +208,8 @@ namespace AsyncBridge
 
             public override void Send(SendOrPostCallback d, object state)
             {
-                throw new NotSupportedException("We cannot send to our same thread");
+                throw new NotSupportedException(
+                    "We cannot send to our same thread");
             }
 
             public override void Post(SendOrPostCallback d, object state)
@@ -229,7 +237,7 @@ namespace AsyncBridge
                     if (task != null)
                     {
                         task.Item1(task.Item2);
-                        if (InnerException != null) // the method threw an exeption
+                        if (InnerException != null) // method threw an exeption
                         {
                             throw new AggregateException(
                                 "AsyncBridge.Run method threw an exception.",

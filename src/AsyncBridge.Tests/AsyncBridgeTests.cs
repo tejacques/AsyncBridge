@@ -161,7 +161,9 @@ namespace AsyncBridge.NET40.Tests
             }
             catch (Exception e)
             {
-                Assert.AreEqual("AsyncBridge.Run method threw an exception.", e.Message);
+                Assert.AreEqual(
+                    "AsyncBridge.Run method threw an exception.",
+                    e.Message);
                 Assert.NotNull(e.InnerException);
                 Assert.AreEqual("Test Exception.", e.InnerException.Message);
             }
@@ -279,7 +281,9 @@ namespace AsyncBridge.NET40.Tests
             }
             catch (Exception e)
             {
-                Assert.AreEqual("AsyncBridge.Run method threw an exception.", e.Message);
+                Assert.AreEqual(
+                    "AsyncBridge.Run method threw an exception.",
+                    e.Message);
                 Assert.NotNull(e.InnerException);
                 Assert.AreEqual("Test Exception.", e.InnerException.Message);
             }
