@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+//using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace AsyncBridge
 {
     using EventTask = Tuple<SendOrPostCallback, object>;
-    using EventQueue = Queue<Tuple<SendOrPostCallback, object>>;
+    using EventQueue = System.Collections.Concurrent.ConcurrentQueue<Tuple<SendOrPostCallback, object>>;
 
     /// <summary>
     /// A Helper class to run Asynchronous functions from synchronous ones
@@ -179,7 +179,6 @@ namespace AsyncBridge
         {
             private readonly AutoResetEvent _workItemsWaiting =
                 new AutoResetEvent(false);
-            private readonly object _lock;
 
             private bool _done;
             private EventQueue _items;
@@ -194,12 +193,10 @@ namespace AsyncBridge
                 if (null != oldEx)
                 {
                     this._items = oldEx._items;
-                    this._lock = oldEx._lock;
                 }
                 else
                 {
                     this._items = new EventQueue();
-                    this._lock = new object();
                 }
             }
 
@@ -210,10 +207,7 @@ namespace AsyncBridge
 
             public override void Post(SendOrPostCallback d, object state)
             {
-                lock (_lock)
-                {
-                    _items.Enqueue(Tuple.Create(d, state));
-                }
+                _items.Enqueue(Tuple.Create(d, state));
                 _workItemsWaiting.Set();
             }
 
@@ -227,13 +221,10 @@ namespace AsyncBridge
                 while (!_done)
                 {
                     EventTask task = null;
-                    
-                    lock (_lock)
+
+                    if (!_items.TryDequeue(out task))
                     {
-                        if (_items.Count > 0)
-                        {
-                            task = _items.Dequeue();
-                        }
+                        task = null;
                     }
 
                     if (task != null)
