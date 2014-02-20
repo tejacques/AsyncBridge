@@ -106,6 +106,59 @@ public void Test()
 }
 ```
 
+### AsyncBridge 2.0 ###
+
+In the new AsyncBridge, the recommended way is now to use `AsyncHelper.Run`
+
+``` csharp
+public async Task<string> AsyncString()
+{
+    await Task.Delay(1000);
+    return "TestAsync";
+}
+
+public void Test()
+{
+    string string1 = "";
+    string string2 = "";
+
+    // Best. We're just writing normal C# 5 Async code
+    // AsyncBridge makes it just work.
+    AsyncHelper.Run(async () =>
+    {
+        var t1 = AsyncString();
+        var t2 = AsyncString();
+        
+        string1 = await t1;
+        string2 = await t2;
+    });
+    
+    // Good. This is exactly as asynchronous with
+    // the same guarantees, but it isn't canonical
+    // C# 5 Async code, instead it uses callbacks.
+    AsyncHelper.Run(A =>
+    {
+        A.Run(AsyncString(), res => string1 = res);
+        A.Run(AsyncString(), res => string2 = res);
+    });
+    
+    // Less good. This will asynchronously wait,
+    // but we could also have queued
+    // up string2
+    AsyncHelper.Run(async () =>
+    {
+        string1 = await AsyncString();
+        string2 = await AsyncString();
+    });
+    
+    // Less good. This is identical to the
+    // previous example. We're not taking
+    // full advantage of async
+    string1 = AsyncHelper.Run(() => AsyncString());
+    string2 = AsyncHelper.Run(() => AsyncString());
+}
+```
+
 Exception Handling
 ------------------
 
