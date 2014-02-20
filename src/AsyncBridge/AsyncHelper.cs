@@ -100,7 +100,14 @@ namespace AsyncBridge
             /// </param>
             public void Run<T>(Task<T> task, Action<T> callback)
             {
-                Run(task, (t) => callback(t.Result));
+                if (null != callback)
+                {
+                    Run(task, (t) => callback(t.Result));
+                }
+                else
+                {
+                    Run((Task)task);
+                }
             }
 
             private void Increment()
@@ -126,10 +133,6 @@ namespace AsyncBridge
                 {
                     CurrentContext.BeginMessageLoop();
                 }
-                catch (Exception e)
-                {
-                    throw e;
-                }
                 finally
                 {
                     SynchronizationContext
@@ -145,6 +148,313 @@ namespace AsyncBridge
         public static AsyncBridge Wait
         {
             get { return new AsyncBridge(); }
+        }
+
+        private static void Try(Action body)
+        {
+            try
+            {
+                body();
+            }
+            catch (AsyncBridgeUnwindException e)
+            {
+                var context = SynchronizationContext.Current
+                    as ExclusiveSynchronizationContext;
+
+                if (null != context && e.Depth > context.Depth)
+                {
+                    throw;
+                }
+
+                throw e.InnerException;
+            }
+        }
+
+        private static void Try<E>(Action body, Action<E> onError)
+            where E: Exception
+        {
+            try
+            {
+                Try(body);
+            }
+            catch (E e)
+            {
+                onError(e);
+            }
+        }
+
+        private static void Try<EOne, ETwo>(
+            Action body,
+            Action<EOne> onErrorOne,
+            Action<ETwo> onErrorTwo)
+            where EOne : Exception
+            where ETwo : Exception
+        {
+            try
+            {
+                Try(body);
+            }
+            catch (EOne e)
+            {
+                onErrorOne(e);
+            }
+            catch (ETwo e)
+            {
+                onErrorTwo(e);
+            }
+        }
+
+        private static void Try<EOne, ETwo, EThree>(
+            Action body,
+            Action<EOne> onErrorOne,
+            Action<ETwo> onErrorTwo,
+            Action<EThree> onErrorThree)
+            where EOne : Exception
+            where ETwo : Exception
+            where EThree : Exception
+        {
+            try
+            {
+                Try(body);
+            }
+            catch (EOne e)
+            {
+                onErrorOne(e);
+            }
+            catch (ETwo e)
+            {
+                onErrorTwo(e);
+            }
+            catch (EThree e)
+            {
+                onErrorThree(e);
+            }
+        }
+
+        private static T Try<T>(Func<T> body)
+        {
+            T result = default(T);
+            Try(delegate { result = body(); });
+            return result;
+        }
+
+        private static T Try<T,E>(Func<T> body, Action<E> onError)
+            where E : Exception
+        {
+            T result = default(T);
+            Try(delegate { result = body(); }, onError);
+            return result;
+        }
+
+        private static T Try<T, EOne, ETwo>(
+            Func<T> body,
+            Action<EOne> onErrorOne,
+            Action<ETwo> onErrorTwo)
+            where EOne : Exception
+            where ETwo : Exception
+        {
+            T result = default(T);
+            Try(delegate { result = body(); }, onErrorOne, onErrorTwo);
+            return result;
+        }
+
+        private static T Try<T, EOne, ETwo, EThree>(
+            Func<T> body,
+            Action<EOne> onErrorOne,
+            Action<ETwo> onErrorTwo,
+            Action<EThree> onErrorThree)
+            where EOne : Exception
+            where ETwo : Exception
+            where EThree : Exception
+        {
+            T result = default(T);
+            Try(delegate { result = body(); },
+                onErrorOne,
+                onErrorTwo,
+                onErrorThree);
+            return result;
+        }
+
+        private static void RunInternal(Action<AsyncBridge> body)
+        {
+            using (var Async = Wait)
+            {
+                body(Async);
+            }
+        }
+
+        /// <summary>
+        /// Runs the body from the provided lambda with a new AsyncBridge
+        /// </summary>
+        public static void Run(Action<AsyncBridge> body)
+        {
+            Try(() => RunInternal(body));
+        }
+
+        /// <summary>
+        /// Runs the Task from the provided function asynchronously. Catches
+        /// the specified error type in onError.
+        /// </summary>
+        public static void Run<E>(
+            Action<AsyncBridge> body,
+            Action<E> onError)
+            where E : Exception
+        {
+            Try(() => RunInternal(body), onError);
+        }
+
+        /// <summary>
+        /// Runs the Task from the provided function asynchronously. Catches
+        /// the specified error types in onError.
+        /// </summary>
+        public static void Run<EOne, ETwo>(
+            Action<AsyncBridge> body,
+            Action<EOne> onErrorOne,
+            Action<ETwo> onErrorTwo)
+            where EOne : Exception
+            where ETwo : Exception
+        {
+            Try(() => RunInternal(body), onErrorOne, onErrorTwo);
+        }
+
+        /// <summary>
+        /// Runs the Task from the provided function asynchronously. Catches
+        /// the specified error types in onError.
+        /// </summary>
+        public static void Run<EOne, ETwo, EThree>(
+            Action<AsyncBridge> body,
+            Action<EOne> onErrorOne,
+            Action<ETwo> onErrorTwo,
+            Action<EThree> onErrorThree)
+            where EOne : Exception
+            where ETwo : Exception
+            where EThree : Exception
+        {
+            Try(() => RunInternal(body), onErrorOne, onErrorTwo, onErrorThree);
+        }
+
+        private static Task RunInternal(Func<Task> task)
+        {
+            Task t;
+            using (var Async = Wait)
+            {
+                Async.Run((t = task()));
+            }
+            return t;
+        }
+
+        /// <summary>
+        /// Runs the Task from the provided function asynchronously.
+        /// </summary>
+        public static void Run(Func<Task> task)
+        {
+            Try(() => RunInternal(task));
+        }
+
+        /// <summary>
+        /// Runs the Task from the provided function asynchronously. Catches
+        /// the specified error type in onError.
+        /// </summary>
+        public static void Run<E>(
+            Func<Task> task,
+            Action<E> onError)
+            where E: Exception
+        {
+            Try(() => RunInternal(task), onError);
+        }
+
+        /// <summary>
+        /// Runs the Task from the provided function asynchronously. Catches
+        /// the specified error types in onError.
+        /// </summary>
+        public static void Run<EOne,ETwo>(
+            Func<Task> task,
+            Action<EOne> onErrorOne,
+            Action<ETwo> onErrorTwo)
+            where EOne : Exception
+            where ETwo : Exception
+        {
+            Try(() => RunInternal(task), onErrorOne, onErrorTwo);
+        }
+
+        /// <summary>
+        /// Runs the Task from the provided function asynchronously. Catches
+        /// the specified error types in onError.
+        /// </summary>
+        public static void Run<EOne, ETwo, EThree>(
+            Func<Task> task,
+            Action<EOne> onErrorOne,
+            Action<ETwo> onErrorTwo,
+            Action<EThree> onErrorThree)
+            where EOne : Exception
+            where ETwo : Exception
+            where EThree : Exception
+        {
+            Try(() => RunInternal(task), onErrorOne, onErrorTwo, onErrorThree);
+        }
+
+        private static T RunInternal<T>(Func<Task<T>> task)
+        {
+            T value = default(T);
+            using (var Async = Wait)
+            {
+                Async.Run(task(), res => value = res);
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// Runs the Task from the provided function asynchronously.
+        /// </summary>
+        public static T Run<T>(Func<Task<T>> task)
+        {
+            return Try(() => RunInternal(task));
+        }
+
+        /// <summary>
+        /// Runs the Task from the provided function asynchronously. Catches
+        /// the specified error type in onError.
+        /// </summary>
+        public static T Run<T, E>(
+            Func<Task<T>> task,
+            Action<E> onError)
+            where E : Exception
+        {
+            return Try(() => RunInternal(task), onError);
+        }
+
+        /// <summary>
+        /// Runs the Task from the provided function asynchronously. Catches
+        /// the specified error types in onError.
+        /// </summary>
+        public static T Run<T, EOne, ETwo>(
+            Func<Task<T>> task,
+            Action<EOne> onErrorOne,
+            Action<ETwo> onErrorTwo)
+            where EOne : Exception
+            where ETwo : Exception
+        {
+            return Try(() => RunInternal(task), onErrorOne, onErrorTwo);
+        }
+
+        /// <summary>
+        /// Runs the Task from the provided function asynchronously. Catches
+        /// the specified error types in onError.
+        /// </summary>
+        public static T Run<T, EOne, ETwo, EThree>(
+            Func<Task<T>> task,
+            Action<EOne> onErrorOne,
+            Action<ETwo> onErrorTwo,
+            Action<EThree> onErrorThree)
+            where EOne : Exception
+            where ETwo : Exception
+            where EThree : Exception
+        {
+            return Try(() =>
+                RunInternal(task),
+                onErrorOne,
+                onErrorTwo,
+                onErrorThree);
         }
 
         /// <summary>
@@ -181,6 +491,19 @@ namespace AsyncBridge
             });
         }
 
+        private class AsyncBridgeUnwindException : Exception
+        {
+            public AsyncBridgeUnwindException(
+                int depth,
+                Exception innerException,
+                string message = "An exception was thrown in AsyncBridge.Run")
+                : base(message, innerException)
+            {
+                Depth = depth;
+            }
+            public int Depth { get; private set; }
+        }
+
         private class ExclusiveSynchronizationContext : SynchronizationContext
         {
             private readonly AutoResetEvent _workItemsWaiting =
@@ -189,20 +512,30 @@ namespace AsyncBridge
             private bool _done;
             private EventQueue _items;
 
-            public Exception InnerException { get; set; }
+            protected ExclusiveSynchronizationContext _parent;
+            protected ConcurrentBag<ExclusiveSynchronizationContext> _children;
+
+            public Exception InnerException { get; internal set; }
+            public int Depth { get; private set; }
 
             public ExclusiveSynchronizationContext(SynchronizationContext old)
             {
                 ExclusiveSynchronizationContext oldEx =
                     old as ExclusiveSynchronizationContext;
 
+                this._children = new ConcurrentBag<ExclusiveSynchronizationContext>();
+
                 if (null != oldEx)
                 {
+                    this._parent = oldEx;
                     this._items = oldEx._items;
+                    this._parent._children.Add(this);
+                    this.Depth = this._parent.Depth + 1;
                 }
                 else
                 {
                     this._items = new EventQueue();
+                    this.Depth = 0;
                 }
             }
 
@@ -239,6 +572,12 @@ namespace AsyncBridge
                         task.Item1(task.Item2);
                         if (InnerException != null) // method threw an exeption
                         {
+                            if (InnerException.GetType()
+                                == typeof(AsyncBridgeUnwindException))
+                            {
+                                throw InnerException;
+                            }
+
                             throw new AggregateException(
                                 "AsyncBridge.Run method threw an exception.",
                                 InnerException);

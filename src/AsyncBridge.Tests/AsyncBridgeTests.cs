@@ -104,12 +104,14 @@ namespace AsyncBridge.NET40.Tests
             {
                 A.Run(AsyncStringDelay(expected, delay), res => string1 = res);
                 A.Run(AsyncStringDelay(expected, delay), res => string2 = res);
+                A.Run(AsyncStringDelay(expected, delay), (Action<string>)null);
             }
             s.Stop();
 
-            // Total Execution time at this point will be ~100ms, not ~200ms
+            // Total Execution time at this point will be ~100ms
             int EPSILON = 30; // millisecond margin of error
             Assert.Less(s.ElapsedMilliseconds, delay + EPSILON);
+            Assert.Greater(s.ElapsedMilliseconds + EPSILON, delay);
 
             // The value of string1 == expected
             Assert.AreEqual(expected, string1);
@@ -226,7 +228,7 @@ namespace AsyncBridge.NET40.Tests
             }
             s.Stop();
 
-            // Total Execution time at this point will be ~100ms, not ~200ms
+            // Total Execution time at this point will be ~100ms
             int EPSILON = 30; // millisecond margin of error
             Assert.Less(s.ElapsedMilliseconds, delay + EPSILON);
 
@@ -267,7 +269,7 @@ namespace AsyncBridge.NET40.Tests
                 using (var A = AsyncHelper.Wait)
                 {
                     A.Run(MultiHelperExceptionAsync());
-                    A.Run(AsyncStringException(50));
+                    A.Run(AsyncStringException(0));
                 }
             });
 
@@ -318,5 +320,35 @@ namespace AsyncBridge.NET40.Tests
             Assert.AreEqual("s", s);
         }
 
+        [Test]
+        public void TestRunBody()
+        {
+            string s = "";
+            AsyncHelper.Run(async () =>
+            {
+                s = await AsyncString("s");
+            });
+
+            Assert.AreEqual("s", s);
+        }
+
+        [Test]
+        public void TestRunBodyReturn()
+        {
+            string s = AsyncHelper.Run(() => AsyncString("s"));
+            Assert.AreEqual("s", s);
+        }
+
+        [Test]
+        public void TestRunTask()
+        {
+            string s = "";
+            AsyncHelper.Run(Async =>
+            {
+                Async.Run(AsyncString("s"), res => s = res);
+            });
+
+            Assert.AreEqual("s", s);
+        }
     }
 }
