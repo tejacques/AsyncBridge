@@ -350,5 +350,24 @@ namespace AsyncBridge.NET40.Tests
 
             Assert.AreEqual("s", s);
         }
+
+        public async Task<string> AsyncStringABUException()
+        {
+#if NET_45
+            await Task.Yield();
+#elif NET_40
+            await TaskEx.Yield();
+#endif
+            throw new Exception("Test");
+        }
+        [Test]
+        public void TestRunBodyException()
+        {
+            AsyncHelper.Run((A) =>
+            {
+                AsyncHelper.Run(() => AsyncString("s"),
+                (Exception e) => Console.WriteLine("Some other exception"));
+            });
+        }
     }
 }

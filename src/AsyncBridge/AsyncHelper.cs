@@ -177,6 +177,10 @@ namespace AsyncBridge
             {
                 Try(body);
             }
+            catch (AsyncBridgeUnwindException e)
+            {
+                throw;
+            }
             catch (E e)
             {
                 onError(e);
@@ -193,6 +197,10 @@ namespace AsyncBridge
             try
             {
                 Try(body);
+            }
+            catch (AsyncBridgeUnwindException e)
+            {
+                throw;
             }
             catch (EOne e)
             {
@@ -216,6 +224,10 @@ namespace AsyncBridge
             try
             {
                 Try(body);
+            }
+            catch (AsyncBridgeUnwindException e)
+            {
+                throw;
             }
             catch (EOne e)
             {
