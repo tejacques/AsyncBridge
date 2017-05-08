@@ -42,7 +42,7 @@ public void Test()
 }
 ```
 
-The reason this deadlock occurs is because the await on Task.Delay(1000) yields execution back to the calling context, which then tries to synchronously block waiting for the task to finish, but the task is never re-entered because only one thread can run a synchronization context as a time.
+The reason this deadlock occurs is because the await on Task.Delay(1000) yields execution back to the calling context, which then tries to synchronously block waiting for the task to finish, but the task is never re-entered because only one thread can run a synchronization context at a time.
 
 AsyncBridge resolves this problem by creating a new SynchronizationContext to run the tasks on, and awaiting on each event in a loop until execution of all tasks completes.
 
