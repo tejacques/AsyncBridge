@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.1</TargetFramework>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <TargetFrameworks>net45;netstandard1.1;netstandard2.0;</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.1;netstandard2.0;</TargetFrameworks>
     <PackageId>AsynchronousBridge</PackageId>
     <Version>2.0.0</Version>
     <Authors>Tom Jacques</Authors>
