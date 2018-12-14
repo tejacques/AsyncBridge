@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace AsyncBridge
 {
-    using EventTask = Tuple<SendOrPostCallback, object>;
     using EventQueue = ConcurrentQueue<Tuple<SendOrPostCallback, object>>;
+    using EventTask = Tuple<SendOrPostCallback, object>;
 
     /// <summary>
     /// A Helper class to run Asynchronous functions from synchronous ones
@@ -32,7 +30,7 @@ namespace AsyncBridge
             internal AsyncBridge()
             {
                 OldContext = SynchronizationContext.Current;
-                CurrentContext = 
+                CurrentContext =
                     new ExclusiveSynchronizationContext(OldContext);
                 SynchronizationContext
                     .SetSynchronizationContext(CurrentContext);
@@ -157,11 +155,7 @@ namespace AsyncBridge
             Func<Task> task,
             Action<Exception> handle = null)
         {
-#if NET_45
             Task.Run(
-#elif NET_40
-            TaskEx.Run(
-#endif
             () =>
             {
                 ((Func<Task>)(async () =>
