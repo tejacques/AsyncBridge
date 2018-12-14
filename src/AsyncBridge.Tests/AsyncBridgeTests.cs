@@ -1,26 +1,18 @@
 ﻿using AsyncBridge;
+using Functional.Option;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Option;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-#if NET_45
 namespace AsyncBridge.Tests
-#elif NET_40
-namespace AsyncBridge.NET40.Tests
-#endif
 {
     [TestFixture]
-#if NET_45
     public class AsyncBridgeTests
-#elif NET_40
-    public class AsyncBridgeNET40Tests
-#endif
     {
         [TestFixtureSetUp]
         public void SetUp()
@@ -29,11 +21,7 @@ namespace AsyncBridge.NET40.Tests
 
         public async Task<string> AsyncString(string s)
         {
-#if NET_45
             await Task.Yield();
-#elif NET_40
-            await TaskEx.Yield();
-#endif
 
             return s;
         }
@@ -54,11 +42,7 @@ namespace AsyncBridge.NET40.Tests
 
         public async Task<string> AsyncStringOption(string s)
         {
-#if NET_45
             await Task.Yield();
-#elif NET_40
-            await TaskEx.Yield();
-#endif
 
             return s;
         }
@@ -79,11 +63,7 @@ namespace AsyncBridge.NET40.Tests
 
         public async Task<string> AsyncStringDelay(string s, int ms)
         {
-#if NET_45
             await Task.Delay(ms);
-#elif NET_40
-            await TaskEx.Delay(ms);
-#endif
 
             return s;
         }
@@ -120,22 +100,14 @@ namespace AsyncBridge.NET40.Tests
 
         public async Task<string> AsyncStringException()
         {
-#if NET_45
             await Task.Yield();
-#elif NET_40
-            await TaskEx.Yield();
-#endif
 
             throw new Exception("Test Exception.");
         }
 
         public async Task<string> AsyncStringException(int msdelay)
         {
-#if NET_45
             await Task.Delay(msdelay);
-#elif NET_40
-            await TaskEx.Delay(msdelay);
-#endif
 
             throw new Exception("Test Exception.");
         }
@@ -171,11 +143,7 @@ namespace AsyncBridge.NET40.Tests
 
         private async Task FAFExample(int ms)
         {
-#if NET_45
             await Task.Delay(ms);
-#elif NET_40
-            await TaskEx.Delay(ms);
-#endif
 
             throw new Exception("Test exception");
         }
@@ -191,7 +159,7 @@ namespace AsyncBridge.NET40.Tests
             s.Start();
             AsyncHelper.FireAndForget(
                 () => FAFExample(delay),
-                e => 
+                e =>
                 {
                     exceptionThrown = true;
                     waitHandle.Set();
@@ -239,11 +207,8 @@ namespace AsyncBridge.NET40.Tests
 
         private async Task MultiHelperAsync(string expected, int delay)
         {
-#if NET_45
             await Task.Yield();
-#elif NET_40
-            await TaskEx.Yield();
-#endif
+
             MultiHelper(expected, delay);
 
         }
@@ -291,11 +256,8 @@ namespace AsyncBridge.NET40.Tests
 
         private async Task MultiHelperExceptionAsync()
         {
-#if NET_45
             await Task.Yield();
-#elif NET_40
-            await TaskEx.Yield();
-#endif
+
             MultiHelperException();
 
         }

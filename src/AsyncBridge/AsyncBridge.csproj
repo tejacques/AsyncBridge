@@ -1,62 +1,75 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{19595376-6FD8-4839-9580-9FD7835502B0}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AsyncBridge</RootNamespace>
-    <AssemblyName>AsyncBridge</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
+    <TargetFramework>netstandard1.1</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <PackageId>AsynchronousBridge</PackageId>
+    <Version>2.0.0</Version>
+    <Authors>Tom Jacques</Authors>
+    <Company>Tom Jacques</Company>
+    <Product>AsynchronousBridge</Product>
+    <Description>An open source helper library for interacting with asynchronous methods from synchronous ones from Windows Forms and ASP.NET applications.
+
+Binaries for the AsyncBridge library.
+        Visit https://github.com/tejacques/AsyncBridge for an overview and usage examples.</Description>
+    <Copyright>Copyright 2018</Copyright>
+    <PackageReleaseNotes>Version Release Notes:
+
+        Version 2.0.0
+        - Now target .NET Standard 1.0.
+        - Removed support of .NET 4.0.
+
+        Version 1.2.2
+        - Uses ConcurrentQueue instead of a Queue with locks.
+
+        Version 1.2.1
+         - Small improvements to error handling
+
+        Version 1.2.0
+         - Allow for recursive asynchronicity by passing the current task queue.
+
+        Version 1.1.1:
+         - Better dependency management
+
+        Version 1.1.0:
+         - Add support for .NET 4.0
+         - Added new method to unwrap task result in callback.
+         - Bug fixes in error handling.
+
+        Version 1.0.3:
+         - Include updated documentation and debugging information in package
+
+        Version 1.0.2:
+         - Fix a race condition by replacing task.ContinueWith with the direct continuation invocation
+
+        Version 1.0.1:
+         - Include XML Documentation
+
+        Version 1.0.0:
+        Fully operational basic functionary for
+         - AsyncBridge.Run(Task)
+         - AsyncHelper.FireAndForget(Func&amp;lt;Task&amp;gt;, Action&amp;lt;Exception&amp;gt;)</PackageReleaseNotes>
+    <PackageLicenseUrl>https://github.com/tejacques/AsyncBridge/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/tejacques/AsyncBridge/</PackageProjectUrl>
+    <PackageIconUrl>https://raw.github.com/tejacques/AsyncBridge/master/icon/AsyncBridge.png</PackageIconUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>Asynchronous Async Await Deadlock Callback</PackageTags>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\AsyncBridge.xml</DocumentationFile>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_45</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;NET_45</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Release\AsyncBridge.XML</DocumentationFile>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\AsyncBridge.xml</DocumentationFile>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Compile Remove="packages\**" />
+    <EmbeddedResource Remove="packages\**" />
+    <None Remove="packages\**" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AsyncHelper.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
