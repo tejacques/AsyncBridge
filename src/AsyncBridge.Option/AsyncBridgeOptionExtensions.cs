@@ -33,7 +33,7 @@ namespace AsyncBridge
         /// <param name="value"></param>
         private static void SetOptionValue<T>(Option<T> option, T value)
         {
-            typeof(Option<T>).GetTypeInfo().DeclaredProperties.First(x => x.Name == "_value").SetValue(option, value, null);
+            typeof(Option<T>).GetTypeInfo().DeclaredFields.First(x => x.Name == "_value").SetValue(option, value);
         }
     }
 }
