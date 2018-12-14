@@ -7,7 +7,7 @@
     <PackageReleaseNotes>Version Release Notes:
 
         Version 2.0.0
-         - Now target .NET Standard 1.0.
+         - Now target .NET Standard 1.1.
 
         Version 1.0.0
          - Adds the following extension method to AsyncBridge

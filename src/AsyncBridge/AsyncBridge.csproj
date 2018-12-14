@@ -16,7 +16,7 @@ Binaries for the AsyncBridge library.
     <PackageReleaseNotes>Version Release Notes:
 
         Version 2.0.0
-        - Now target .NET Standard 1.0.
+        - Now target .NET Standard 1.1.
         - Removed support of .NET 4.0.
 
         Version 1.2.2
