@@ -22,7 +22,7 @@ namespace AsyncBridge.NET40.Tests
     public class AsyncBridgeNET40Tests
 #endif
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
         }
